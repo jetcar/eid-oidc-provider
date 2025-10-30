@@ -52,10 +52,10 @@ public class WebEidAuthTokenConfig {
             List<X509Certificate> result = new ArrayList<>();
             for (String alias : java.util.Collections.list(ks.aliases())) {
                 Certificate cert = ks.getCertificate(alias);
-                if (cert instanceof X509Certificate) {
+                if (cert instanceof X509Certificate certificate) {
                     log.info("Loaded Web-eID trusted CA from keystore '{}' alias='{}' DN='{}'",
-                            keystorePath, alias, ((X509Certificate) cert).getSubjectX500Principal().getName());
-                    result.add((X509Certificate) cert);
+                            keystorePath, alias, certificate.getSubjectX500Principal().getName());
+                    result.add(certificate);
                 }
             }
             return result.toArray(new X509Certificate[0]);

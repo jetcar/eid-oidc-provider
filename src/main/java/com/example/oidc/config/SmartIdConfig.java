@@ -39,10 +39,10 @@ public class SmartIdConfig {
             }
             for (String alias : Collections.list(ks.aliases())) {
                 Certificate cert = ks.getCertificate(alias);
-                if (cert instanceof X509Certificate) {
+                if (cert instanceof X509Certificate certificate) {
                     log.info("Loaded Smart-ID CA certificate from trust-store '{}' alias='{}' DN='{}'",
-                            trustStorePath, alias, ((X509Certificate) cert).getSubjectX500Principal().getName());
-                    validator.addTrustedCACertificate((X509Certificate) cert);
+                            trustStorePath, alias, certificate.getSubjectX500Principal().getName());
+                    validator.addTrustedCACertificate(certificate);
                 }
             }
 
