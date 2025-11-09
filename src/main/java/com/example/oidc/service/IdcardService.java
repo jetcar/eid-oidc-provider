@@ -151,7 +151,7 @@ public class IdcardService {
         user.setCert(certBase64);
         oidcSessionStore.storeCode(code, user);
 
-        StringBuilder redirect = new StringBuilder(client.getRedirectUri())
+        StringBuilder redirect = new StringBuilder(client.getRedirectUri(redirectUri))
                 .append("?code=").append(code);
         if (state != null) {
             redirect.append("&state=").append(state);
@@ -160,4 +160,3 @@ public class IdcardService {
         return resp;
     }
 }
-       

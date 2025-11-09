@@ -2,44 +2,53 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
-    org.springframework.boot.autoconfigure.security: DEBUG
+    org.springframework.boot.autoconfigure: INFO
+    org.springframework.boot.actuate.endpoint.web: WARN
     com.nimbusds: DEBUG
     ee.sk.smartid.rest.LoggingFilter: debug
 server:
-  port: 8443
+  port: ${SERVER_PORT:8443}
   ssl:
-    enabled: true
-    key-store: classpath:keystore.p12
-    key-store-password: changeit
+    enabled: ${SSL_ENABLED:true}
+    key-store: file:${CONFIG_PATH:/repo/vscode/backend/config}/keystore.p12
+    key-store-password: ${KEY_STORE_PASSWORD:changeit}
     key-store-type: PKCS12
     key-alias: springboot
 spring:
   redis:
-    host: localhost
-    port: 6379
-    # password: your_redis_password   # Uncomment and set if needed
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
 mid:
   client:
-    host-url: "https://tsp.demo.sk.ee/mid-api"
-    relying-party-uuid: "00000000-0000-0000-0000-000000000000"
-    relying-party-name: "DEMO"
-    trust-store: /repo/vscode/backend/config/idcard.p12
-    trust-store-password: ""
-    api-trust-store: /repo/vscode/backend/config/smartId_api.p12
-    api-trust-store-password: ""
+    host-url: ${MID_HOST_URL:https://tsp.demo.sk.ee/mid-api}
+    relying-party-uuid: ${MID_RELYING_PARTY_UUID:00000000-0000-0000-0000-000000000000}
+    relying-party-name: ${MID_RELYING_PARTY_NAME:DEMO}
+    trust-store: ${CONFIG_PATH:/repo/vscode/backend/config}/idcard.p12
+    trust-store-password: ${MID_TRUST_STORE_PASSWORD:}
+    api-trust-store: ${CONFIG_PATH:/repo/vscode/backend/config}/smartId_api.p12
+    api-trust-store-password: ${MID_API_TRUST_STORE_PASSWORD:}
 smartid:
   client:
-    host-url: "https://sid.demo.sk.ee/smart-id-rp/v2/"
-    relying-party-uuid: "00000000-0000-0000-0000-000000000000"
-    relying-party-name: "DEMO"
-    trust-store: /repo/vscode/backend/config/idcard.p12    
-    trust-store-password: ""
-    api-trust-store: /repo/vscode/backend/config/smartId_api.p12
-    api-trust-store-password: ""
-    allowed-interaction-text: "Log in to self-service?"
-    certificate-level: "QUALIFIED"
+    host-url: ${SMARTID_HOST_URL:https://sid.demo.sk.ee/smart-id-rp/v2/}
+    relying-party-uuid: ${SMARTID_RELYING_PARTY_UUID:00000000-0000-0000-0000-000000000000}
+    relying-party-name: ${SMARTID_RELYING_PARTY_NAME:DEMO}
+    trust-store: ${CONFIG_PATH:/repo/vscode/backend/config}/idcard.p12    
+    trust-store-password: ${SMARTID_TRUST_STORE_PASSWORD:}
+    api-trust-store: ${CONFIG_PATH:/repo/vscode/backend/config}/smartId_api.p12
+    api-trust-store-password: ${SMARTID_API_TRUST_STORE_PASSWORD:}
+    allowed-interaction-text: ${SMARTID_INTERACTION_TEXT:Log in to self-service?}
+    certificate-level: ${SMARTID_CERTIFICATE_LEVEL:QUALIFIED}
 webeid:
-  ca-keystore: /repo/vscode/backend/config/idcard.p12
-  ca-keystore-password: ""
+  ca-keystore: ${CONFIG_PATH:/repo/vscode/backend/config}/idcard.p12
+  ca-keystore-password: ${WEBEID_CA_KEYSTORE_PASSWORD:}
 oidc:
-  issuer: "https://localhost:8443"
+  issuer: ${OIDC_ISSUER:https://localhost:8443}

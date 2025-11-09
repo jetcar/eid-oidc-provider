@@ -1,0 +1,13 @@
+{
+    "clients": [
+        {
+            "clientId": "demo-client-id",
+            "clientSecret": "demo-client-secret",
+            "redirectUri": [
+                "https://localhost:8082/oidc-test/login/oauth2/code/demo",
+                "https://localhost/oidc-test/login/oauth2/code/demo"
+            ],
+            "scope": "openid profile email"
+        }
+    ]
+}

@@ -181,7 +181,7 @@ public class MobileIdService {
 
             oidcSessionStore.storeCode(code, user);
             StringBuilder redirectUrl = new StringBuilder()
-                    .append(client.getRedirectUri()).append("?code=").append(code);
+                    .append(client.getRedirectUri(redirectUri)).append("?code=").append(code);
             if (state != null) {
                 redirectUrl.append("&state=").append(state);
             }

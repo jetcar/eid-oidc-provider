@@ -1,5 +1,6 @@
 package com.example.oidc.controllers.OIDC;
 
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,8 @@ public class OidcTokenController {
     private final OidcSessionStore oidcSessionStore;
     private final OidcClientRegistry clientRegistry;
     private PrivateKey jwtPrivateKey;
+    @Value("${server.ssl.key-store}")
+    private String keystorePath;
     @Value("${server.ssl.key-store-password}")
     private String keystorePassword;
     @Value("${oidc.issuer:https://localhost:8443}")
@@ -38,7 +41,11 @@ public class OidcTokenController {
     @jakarta.annotation.PostConstruct
     public void loadPrivateKey() throws Exception {
         KeyStore ks = KeyStore.getInstance("PKCS12");
-        try (java.io.InputStream is = getClass().getClassLoader().getResourceAsStream("keystore.p12")) {
+
+        // Remove "file:" prefix if present
+        String path = keystorePath.startsWith("file:") ? keystorePath.substring(5) : keystorePath;
+
+        try (java.io.InputStream is = new FileSystemResource(path).getInputStream()) {
             ks.load(is, keystorePassword.toCharArray());
         }
         jwtPrivateKey = (PrivateKey) ks.getKey("springboot", keystorePassword.toCharArray());

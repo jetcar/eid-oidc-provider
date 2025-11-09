@@ -156,7 +156,7 @@ public class SmartIdService {
 
                     oidcSessionStore.storeCode(code, user);
                     StringBuilder redirectUrl = new StringBuilder();
-                    redirectUrl.append(client.getRedirectUri()).append("?code=").append(code);
+                    redirectUrl.append(client.getRedirectUri(redirectUri)).append("?code=").append(code);
                     if (state != null) {
                         redirectUrl.append("&state=").append(state);
                     }

@@ -112,7 +112,7 @@ class IdcardServiceTest {
                 when(CertificateData.getSubjectSurname(mockCert)).thenReturn(Optional.of("Smith"));
 
                 OidcClient mockClient = mock(OidcClient.class);
-                when(mockClient.getRedirectUri()).thenReturn("http://localhost");
+                when(mockClient.getRedirectUri(any())).thenReturn("http://localhost");
                 when(clientRegistry.isValidClient(any(), any())).thenReturn(mockClient);
 
                 IdCardLoginResponse response = service.login(body, "client1", "http://localhost", "state1", "nonce1",

@@ -27,7 +27,9 @@ public class OidcAuthorizationController {
     // After validation it redirects to /index.html with the same query params; the
     // frontend reads them via getOidcParams().
     @GetMapping("/authorize")
-    public org.springframework.web.servlet.view.RedirectView authorize(@RequestParam Map<String, String> params) {
+    public org.springframework.web.servlet.view.RedirectView authorize(
+            @RequestParam Map<String, String> params,
+            @org.springframework.web.bind.annotation.RequestHeader(value = "X-Forwarded-Prefix", required = false) String forwardedPrefix) {
         // Convert params to Map<String, List<String>>
         Map<String, java.util.List<String>> multiParams = new HashMap<>();
         for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -43,12 +45,14 @@ public class OidcAuthorizationController {
         ClientID clientID = request.getClientID();
         URI redirectUri = request.getRedirectionURI();
         // Validate client (client_id and redirect_uri)
-        if (clientID == null || redirectUri == null
-                || clientRegistry.isValidClient(clientID.getValue(), redirectUri.toString()) != null) {
+        var validClient = clientRegistry.isValidClient(clientID.getValue(), redirectUri.toString());
+        if (clientID == null || redirectUri == null || validClient == null) {
             return new org.springframework.web.servlet.view.RedirectView("/error?error=Invalid+client_id");
         }
+        // Use X-Forwarded-Prefix from HAProxy, or empty string if running directly
+        String basePath = (forwardedPrefix != null && !forwardedPrefix.isEmpty()) ? forwardedPrefix : "";
         // Redirect to index.html with all OIDC parameters
-        StringBuilder redirectUrl = new StringBuilder("/index.html?");
+        StringBuilder redirectUrl = new StringBuilder(basePath).append("/index.html?");
         for (Map.Entry<String, String> entry : params.entrySet()) {
             redirectUrl.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
         }
