@@ -1,6 +1,6 @@
-# Backend
+# Estonian eID OIDC Provider
 
-This is the backend for the OIDC authentication system supporting Estonian eID, Mobile-ID, and Smart-ID.
+This is an OIDC Provider (OpenID Connect authentication server) supporting Estonian eID, Mobile-ID, and Smart-ID authentication methods.
 
 ## Features
 

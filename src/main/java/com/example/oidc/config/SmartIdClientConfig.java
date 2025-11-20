@@ -1,13 +1,10 @@
 package com.example.oidc.config;
 
 import ee.sk.smartid.SmartIdClient;
-import jakarta.ws.rs.client.Client;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
-
 import java.io.InputStream;
 import java.security.KeyStore;
 

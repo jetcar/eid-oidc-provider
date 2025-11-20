@@ -8,9 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.io.InputStream;
 import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.util.Collections;
 
 @Configuration
 public class MobileIdValidatorConfig {
