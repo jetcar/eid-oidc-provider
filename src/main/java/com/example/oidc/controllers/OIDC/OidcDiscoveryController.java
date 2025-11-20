@@ -1,5 +1,7 @@
 package com.example.oidc.controllers.OIDC;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,8 +9,10 @@ import java.util.Map;
 import java.util.HashMap;
 
 @RestController
+@Tag(name = "OIDC Discovery", description = "OpenID Connect discovery endpoints")
 public class OidcDiscoveryController {
     @GetMapping("/.well-known/openid-configuration")
+    @Operation(summary = "OpenID Connect discovery", description = "Returns the OpenID Connect discovery document")
     public Map<String, Object> discovery(HttpServletRequest request) {
         // Build base URL from forwarded headers (set by HAProxy)
         String proto = request.getHeader("X-Forwarded-Proto");

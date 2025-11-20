@@ -10,10 +10,10 @@ server:
   port: ${SERVER_PORT:8443}
   ssl:
     enabled: ${SSL_ENABLED:true}
-    key-store: file:${CONFIG_PATH:/repo/vscode/backend/config}/keystore.p12
+    key-store: file:${SSL_KEYSTORE_PATH:/repo/vscode/backend/config/keystore.p12}
     key-store-password: ${KEY_STORE_PASSWORD:changeit}
     key-store-type: PKCS12
-    key-alias: springboot
+    key-alias: ${SSL_KEYSTORE_ALIAS:springboot}
 spring:
   redis:
     host: ${REDIS_HOST:localhost}
@@ -29,26 +29,34 @@ management:
       show-details: always
 mid:
   client:
-    host-url: ${MID_HOST_URL:https://tsp.demo.sk.ee/mid-api}
+    host-url: ${MID_HOST_URL:https://localhost:8083}
     relying-party-uuid: ${MID_RELYING_PARTY_UUID:00000000-0000-0000-0000-000000000000}
     relying-party-name: ${MID_RELYING_PARTY_NAME:DEMO}
-    trust-store: ${CONFIG_PATH:/repo/vscode/backend/config}/idcard.p12
+    trust-store: ${MID_TRUST_STORE_PATH:/repo/vscode/backend/config/smartId_mock.p12}
     trust-store-password: ${MID_TRUST_STORE_PASSWORD:}
-    api-trust-store: ${CONFIG_PATH:/repo/vscode/backend/config}/smartId_api.p12
+    api-trust-store: ${MID_API_TRUST_STORE_PATH:/repo/vscode/backend/config/smartId_mock.p12}
     api-trust-store-password: ${MID_API_TRUST_STORE_PASSWORD:}
 smartid:
   client:
-    host-url: ${SMARTID_HOST_URL:https://sid.demo.sk.ee/smart-id-rp/v2/}
+    host-url: ${SMARTID_HOST_URL:https://localhost:8083}
     relying-party-uuid: ${SMARTID_RELYING_PARTY_UUID:00000000-0000-0000-0000-000000000000}
     relying-party-name: ${SMARTID_RELYING_PARTY_NAME:DEMO}
-    trust-store: ${CONFIG_PATH:/repo/vscode/backend/config}/idcard.p12    
+    trust-store: ${SMARTID_TRUST_STORE_PATH:/repo/vscode/backend/config/smartId_mock.p12}
     trust-store-password: ${SMARTID_TRUST_STORE_PASSWORD:}
-    api-trust-store: ${CONFIG_PATH:/repo/vscode/backend/config}/smartId_api.p12
+    api-trust-store: ${SMARTID_API_TRUST_STORE_PATH:/repo/vscode/backend/config/smartId_mock.p12}
     api-trust-store-password: ${SMARTID_API_TRUST_STORE_PASSWORD:}
     allowed-interaction-text: ${SMARTID_INTERACTION_TEXT:Log in to self-service?}
     certificate-level: ${SMARTID_CERTIFICATE_LEVEL:QUALIFIED}
 webeid:
-  ca-keystore: ${CONFIG_PATH:/repo/vscode/backend/config}/idcard.p12
+  ca-keystore: ${WEBEID_CA_KEYSTORE_PATH:/repo/vscode/backend/config/smartId_mock.p12}
   ca-keystore-password: ${WEBEID_CA_KEYSTORE_PASSWORD:}
 oidc:
   issuer: ${OIDC_ISSUER:https://localhost:8443}
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  show-actuator: true

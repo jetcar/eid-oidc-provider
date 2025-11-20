@@ -1,5 +1,8 @@
 package com.example.oidc.controllers.OIDC;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +15,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 @RestController
+@Tag(name = "OIDC Authorization", description = "OAuth2/OIDC authorization endpoints")
 public class OidcAuthorizationController {
     private final OidcClientRegistry clientRegistry;
 
@@ -27,8 +31,9 @@ public class OidcAuthorizationController {
     // After validation it redirects to /index.html with the same query params; the
     // frontend reads them via getOidcParams().
     @GetMapping("/authorize")
+    @Operation(summary = "OAuth2 authorization endpoint", description = "Initiates the OAuth2/OIDC authorization flow")
     public org.springframework.web.servlet.view.RedirectView authorize(
-            @RequestParam Map<String, String> params,
+            @Parameter(description = "OAuth2/OIDC authorization parameters") @RequestParam Map<String, String> params,
             @org.springframework.web.bind.annotation.RequestHeader(value = "X-Forwarded-Prefix", required = false) String forwardedPrefix) {
         // Convert params to Map<String, List<String>>
         Map<String, java.util.List<String>> multiParams = new HashMap<>();

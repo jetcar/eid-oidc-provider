@@ -97,6 +97,13 @@
       <artifactId>bcpkix-jdk18on</artifactId>
       <version>1.82</version>
     </dependency>
+    
+    <!-- Swagger/OpenAPI -->
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>2.3.0</version>
+    </dependency>
   </dependencies>
 
   <build>
