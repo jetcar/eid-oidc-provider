@@ -21,16 +21,18 @@ public class OidcClientRegistry {
     private final Map<String, OidcClient> clients = new HashMap<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${CONFIG_PATH:/repo/vscode/backend/config}")
-    private String configPath;
+    @Value("${oidc.clients-config}")
+    private String clientsConfigPath;
 
-    public OidcClientRegistry(@Value("${CONFIG_PATH:/repo/vscode/backend/config}") String configPath) {
-        this.configPath = configPath;
+    public OidcClientRegistry(@Value("${oidc.clients-config}") String clientsConfigPath) {
+        this.clientsConfigPath = clientsConfigPath;
         loadClientsFromConfig();
     }
 
     private void loadClientsFromConfig() {
-        File configFile = new File(configPath, "oidc-clients.json");
+        // Handle file: prefix if present
+        String filePath = clientsConfigPath;
+        File configFile = new File(filePath);
 
         logger.info("Loading OIDC clients from: {}", configFile.getAbsolutePath());
 
