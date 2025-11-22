@@ -29,7 +29,7 @@ management:
       show-details: always
 mid:
   client:
-    host-url: ${MID_HOST_URL:https://localhost:8083}
+    host-url: ${MID_HOST_URL:https://localhost:8083/mid-api}
     relying-party-uuid: ${MID_RELYING_PARTY_UUID:00000000-0000-0000-0000-000000000000}
     relying-party-name: ${MID_RELYING_PARTY_NAME:DEMO}
     trust-store: ${MID_TRUST_STORE_PATH:eid-oidc-provider/config/smartid_mock.p12}
