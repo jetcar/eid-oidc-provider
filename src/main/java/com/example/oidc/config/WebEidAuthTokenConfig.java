@@ -22,7 +22,7 @@ public class WebEidAuthTokenConfig {
 
     private static final Logger log = LoggerFactory.getLogger(WebEidAuthTokenConfig.class);
 
-    @Value("${webeid.ca-keystore:config/idcard.p12}")
+    @Value("${webeid.ca-keystore:}")
     private String keystorePath;
 
     @Value("${webeid.ca-keystore-password:}")

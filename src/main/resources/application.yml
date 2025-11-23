@@ -33,23 +33,23 @@ mid:
     relying-party-uuid: ${MID_RELYING_PARTY_UUID:00000000-0000-0000-0000-000000000000}
     relying-party-name: ${MID_RELYING_PARTY_NAME:DEMO}
     trust-store: ${MID_TRUST_STORE_PATH:eid-oidc-provider/config/smartid_mock.p12}
-    trust-store-password: ${MID_TRUST_STORE_PASSWORD:}
+    trust-store-password: ${MID_TRUST_STORE_PASSWORD:changeit}
     api-trust-store: ${MID_API_TRUST_STORE_PATH:eid-oidc-provider/config/smartid_mock.p12}
-    api-trust-store-password: ${MID_API_TRUST_STORE_PASSWORD:}
+    api-trust-store-password: ${MID_API_TRUST_STORE_PASSWORD:changeit}
 smartid:
   client:
     host-url: ${SMARTID_HOST_URL:https://localhost:8083}
     relying-party-uuid: ${SMARTID_RELYING_PARTY_UUID:00000000-0000-0000-0000-000000000000}
     relying-party-name: ${SMARTID_RELYING_PARTY_NAME:DEMO}
     trust-store: ${SMARTID_TRUST_STORE_PATH:eid-oidc-provider/config/smartid_mock.p12}
-    trust-store-password: ${SMARTID_TRUST_STORE_PASSWORD:}
+    trust-store-password: ${SMARTID_TRUST_STORE_PASSWORD:changeit}
     api-trust-store: ${SMARTID_API_TRUST_STORE_PATH:eid-oidc-provider/config/smartid_mock.p12}
-    api-trust-store-password: ${SMARTID_API_TRUST_STORE_PASSWORD:}
+    api-trust-store-password: ${SMARTID_API_TRUST_STORE_PASSWORD:changeit}
     allowed-interaction-text: ${SMARTID_INTERACTION_TEXT:Log in to self-service?}
     certificate-level: ${SMARTID_CERTIFICATE_LEVEL:QUALIFIED}
 webeid:
   ca-keystore: ${WEBEID_CA_KEYSTORE_PATH:eid-oidc-provider/config/smartid_mock.p12}
-  ca-keystore-password: ${WEBEID_CA_KEYSTORE_PASSWORD:}
+  ca-keystore-password: ${WEBEID_CA_KEYSTORE_PASSWORD:changeit}
 oidc:
   issuer: ${OIDC_ISSUER:https://localhost:8443}
   clients-config: ${OIDC_CLIENTS_CONFIG:eid-oidc-provider/config/oidc-clients.json}
