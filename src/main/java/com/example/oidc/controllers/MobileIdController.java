@@ -2,7 +2,7 @@ package com.example.oidc.controllers;
 
 import com.example.oidc.dto.MobileIdCheckResponse;
 import com.example.oidc.dto.MobileIdStartResponse;
-import com.example.oidc.service.MobileIdService;
+import com.example.oidc.service.IMobileIdService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Mobile-ID Authentication", description = "Endpoints for Mobile-ID authentication flow")
 public class MobileIdController {
 
-    private final MobileIdService mobileIdService;
+    private final IMobileIdService mobileIdService;
 
     @Autowired
-    public MobileIdController(MobileIdService mobileIdService) {
+    public MobileIdController(IMobileIdService mobileIdService) {
         this.mobileIdService = mobileIdService;
     }
 

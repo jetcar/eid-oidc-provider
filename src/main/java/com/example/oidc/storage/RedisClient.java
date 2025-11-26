@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component
-public class RedisClient {
+public class RedisClient implements IRedisClient {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisClient.class);
     private final StringRedisTemplate redisTemplate;
@@ -19,6 +19,7 @@ public class RedisClient {
         this.redisTemplate = redisTemplate;
     }
 
+    @Override
     public void setValue(String key, String value, long expiration, TimeUnit timeUnit) {
         try {
             redisTemplate.opsForValue().set(key, value, expiration, timeUnit);
@@ -32,11 +33,13 @@ public class RedisClient {
         }
     }
 
+    @Override
     public void setValue(String key, String value) {
         long defaultExpiration = 300; // Default expiration time in seconds
         setValue(key, value, defaultExpiration, TimeUnit.SECONDS);
     }
 
+    @Override
     public String getValue(String key) {
         try {
             return redisTemplate.opsForValue().get(key);
@@ -50,6 +53,7 @@ public class RedisClient {
         }
     }
 
+    @Override
     public void delete(String key) {
         try {
             redisTemplate.delete(key);
@@ -65,6 +69,7 @@ public class RedisClient {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Override
     public <T> void setObject(String key, T value, long expiration, TimeUnit timeUnit) {
         try {
             String json = objectMapper.writeValueAsString(value);
@@ -75,7 +80,7 @@ public class RedisClient {
         }
     }
 
-    // Added overloaded setObject method without expiration parameters
+    @Override
     public <T> void setObject(String key, T value) {
         try {
             String json = objectMapper.writeValueAsString(value);
@@ -86,6 +91,7 @@ public class RedisClient {
         }
     }
 
+    @Override
     public <T> T getObject(String key, Class<T> valueType) {
         try {
             String json = getValue(key);

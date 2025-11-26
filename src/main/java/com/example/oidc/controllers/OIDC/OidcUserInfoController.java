@@ -4,17 +4,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.oidc.storage.UserInfo;
-import com.example.oidc.storage.OidcSessionStore;
+import com.example.oidc.storage.IOidcSessionStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 public class OidcUserInfoController {
-    private final OidcSessionStore oidcSessionStore;
+    private final IOidcSessionStore oidcSessionStore;
 
     @Autowired
-    public OidcUserInfoController(OidcSessionStore oidcSessionStore) {
+    public OidcUserInfoController(IOidcSessionStore oidcSessionStore) {
         this.oidcSessionStore = oidcSessionStore;
     }
 

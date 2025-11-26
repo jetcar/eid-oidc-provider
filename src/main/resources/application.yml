@@ -50,6 +50,10 @@ smartid:
 webeid:
   ca-keystore: ${WEBEID_CA_KEYSTORE_PATH:eid-oidc-provider/config/smartid_mock.p12}
   ca-keystore-password: ${WEBEID_CA_KEYSTORE_PASSWORD:changeit}
+  ocsp:
+    enabled: ${WEBEID_OCSP_ENABLED:false}
+    url: ${WEBEID_OCSP_URL:}
+    timeout-seconds: ${WEBEID_OCSP_TIMEOUT:5}
 oidc:
   issuer: ${OIDC_ISSUER:https://localhost:8443}
   clients-config: ${OIDC_CLIENTS_CONFIG:eid-oidc-provider/config/oidc-clients.json}

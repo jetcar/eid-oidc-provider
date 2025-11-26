@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.oidc.storage.UserInfo;
 import com.example.oidc.storage.OidcClient;
 import com.example.oidc.storage.OidcClientRegistry;
-import com.example.oidc.storage.OidcSessionStore;
+import com.example.oidc.storage.IOidcSessionStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ import java.security.PrivateKey;
 
 @RestController
 public class OidcTokenController {
-    private final OidcSessionStore oidcSessionStore;
+    private final IOidcSessionStore oidcSessionStore;
     private final OidcClientRegistry clientRegistry;
     private PrivateKey jwtPrivateKey;
     @Value("${server.ssl.key-store}")
@@ -33,7 +33,7 @@ public class OidcTokenController {
     private String issuer;
 
     @Autowired
-    public OidcTokenController(OidcSessionStore oidcSessionStore, OidcClientRegistry clientRegistry) {
+    public OidcTokenController(IOidcSessionStore oidcSessionStore, OidcClientRegistry clientRegistry) {
         this.oidcSessionStore = oidcSessionStore;
         this.clientRegistry = clientRegistry;
     }

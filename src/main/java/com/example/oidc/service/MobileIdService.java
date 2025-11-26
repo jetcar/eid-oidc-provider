@@ -5,7 +5,7 @@ import com.example.oidc.dto.MobileIdSession;
 import com.example.oidc.dto.MobileIdStartResponse;
 import com.example.oidc.storage.OidcClient;
 import com.example.oidc.storage.OidcClientRegistry;
-import com.example.oidc.storage.OidcSessionStore;
+import com.example.oidc.storage.IOidcSessionStore;
 import com.example.oidc.storage.UserInfo;
 import com.example.oidc.util.PersonalCodeHelper;
 import com.example.oidc.util.RandomCodeGenerator;
@@ -26,19 +26,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MobileIdService {
+public class MobileIdService implements IMobileIdService {
 
     private static final Logger log = LoggerFactory.getLogger(MobileIdService.class);
 
     private final MidClient midClient;
-    private final OidcSessionStore oidcSessionStore;
+    private final IOidcSessionStore oidcSessionStore;
     private final OidcClientRegistry clientRegistry;
     private final MidAuthenticationResponseValidator authenticationResponseValidator;
 
     @Autowired
     public MobileIdService(
             MidClient midClient,
-            OidcSessionStore oidcSessionStore,
+            IOidcSessionStore oidcSessionStore,
             OidcClientRegistry clientRegistry,
             @Qualifier("midAuthenticationResponseValidator") MidAuthenticationResponseValidator authenticationResponseValidator) {
         this.midClient = midClient;
@@ -47,6 +47,7 @@ public class MobileIdService {
         this.authenticationResponseValidator = authenticationResponseValidator;
     }
 
+    @Override
     public MobileIdStartResponse startMobileId(String personalCode, String phoneNumber, String countryCode,
             String clientId,
             String redirectUri) {
@@ -94,6 +95,7 @@ public class MobileIdService {
         return responseBody;
     }
 
+    @Override
     public MobileIdCheckResponse checkMobileId(String sessionId, String clientId, String redirectUri,
             String responseType,
             String scope, String state, String nonce) {

@@ -2,6 +2,7 @@ package com.example.oidc.config;
 
 import eu.webeid.security.validator.AuthTokenValidator;
 import eu.webeid.security.validator.AuthTokenValidatorBuilder;
+import eu.webeid.security.validator.ocsp.OcspClientImpl;
 import eu.webeid.security.exceptions.JceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,16 +32,46 @@ public class WebEidAuthTokenConfig {
     @Value("${oidc.issuer}")
     private String oidcIssuer;
 
+    @Value("${webeid.ocsp.url:#{null}}")
+    private String ocspUrl;
+
+    @Value("${webeid.ocsp.enabled:false}")
+    private boolean ocspEnabled;
+
+    @Value("${webeid.ocsp.timeout-seconds:5}")
+    private int ocspTimeoutSeconds;
+
     @Bean
     public AuthTokenValidator tokenValidator() throws JceException {
         String origin = oidcIssuer;
         if (origin == null || origin.isBlank()) {
             throw new IllegalStateException("oidc.issuer must be configured in application.yml");
         }
-        return new AuthTokenValidatorBuilder()
+
+        log.info("Configuring Web-eID AuthTokenValidator");
+        log.info("Site origin: {}", origin);
+        log.info("OCSP validation enabled: {}", ocspEnabled);
+        if (ocspEnabled && ocspUrl != null) {
+            log.info("OCSP endpoint: {}", ocspUrl);
+            log.info("OCSP timeout: {} seconds", ocspTimeoutSeconds);
+        }
+
+        AuthTokenValidatorBuilder builder = new AuthTokenValidatorBuilder()
                 .withSiteOrigin(URI.create(origin.trim()))
                 .withTrustedCertificateAuthorities(loadTrustedCAsFromKeystore())
-                .build();
+                .withOcspRequestTimeout(java.time.Duration.ofSeconds(ocspTimeoutSeconds));
+
+        if (!ocspEnabled) {
+            log.info("OCSP validation disabled for development/testing");
+            builder.withoutUserCertificateRevocationCheckWithOcsp();
+        } else {
+            log.info("OCSP validation enabled");
+            // OCSP will use URLs from the certificate's AIA extension by default
+            // Custom OCSP URL configuration would require
+            // DesignatedOcspServiceConfiguration
+        }
+
+        return builder.build();
     }
 
     private X509Certificate[] loadTrustedCAsFromKeystore() {

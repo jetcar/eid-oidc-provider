@@ -2,7 +2,7 @@ package com.example.oidc.controllers;
 
 import com.example.oidc.dto.SmartIdCheckResponse;
 import com.example.oidc.dto.SmartIdStartResponse;
-import com.example.oidc.service.SmartIdService;
+import com.example.oidc.service.ISmartIdService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Smart-ID Authentication", description = "Endpoints for Smart-ID authentication flow")
 public class SmartIdController {
 
-    private final SmartIdService smartIdService;
+    private final ISmartIdService smartIdService;
 
     @Autowired
-    public SmartIdController(SmartIdService smartIdService) {
+    public SmartIdController(ISmartIdService smartIdService) {
         this.smartIdService = smartIdService;
     }
 

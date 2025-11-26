@@ -5,7 +5,7 @@ import com.example.oidc.dto.SmartIdSession;
 import com.example.oidc.dto.SmartIdStartResponse;
 import com.example.oidc.storage.OidcClient;
 import com.example.oidc.storage.OidcClientRegistry;
-import com.example.oidc.storage.OidcSessionStore;
+import com.example.oidc.storage.IOidcSessionStore;
 import com.example.oidc.storage.UserInfo;
 
 import ee.sk.smartid.AuthenticationHash;
@@ -27,9 +27,9 @@ import java.util.Collections;
 import com.example.oidc.util.RandomCodeGenerator;
 
 @Service
-public class SmartIdService {
+public class SmartIdService implements ISmartIdService {
 
-    private final OidcSessionStore oidcSessionStore;
+    private final IOidcSessionStore oidcSessionStore;
     private final OidcClientRegistry clientRegistry;
     private final SmartIdClient smartIdClient;
     private final AuthenticationResponseValidator authenticationResponseValidator;
@@ -42,7 +42,7 @@ public class SmartIdService {
 
     @Autowired
     public SmartIdService(
-            OidcSessionStore oidcSessionStore,
+            IOidcSessionStore oidcSessionStore,
             OidcClientRegistry clientRegistry,
             SmartIdClient smartIdClient,
             @Qualifier("authenticationResponseValidator") AuthenticationResponseValidator authenticationResponseValidator) {
@@ -52,6 +52,7 @@ public class SmartIdService {
         this.authenticationResponseValidator = authenticationResponseValidator;
     }
 
+    @Override
     public SmartIdStartResponse startSmartId(String country, String personalCode) {
         // For security reasons a new hash value must be created for each new
         // authentication request
@@ -71,6 +72,7 @@ public class SmartIdService {
         return responseBody;
     }
 
+    @Override
     public SmartIdCheckResponse checkSmartId(String sessionId, String clientId, String redirectUri, String responseType,
             String scope, String state, String nonce) {
         SmartIdSession session = oidcSessionStore.getSmartIdSession(sessionId);

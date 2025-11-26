@@ -10,9 +10,8 @@ import com.example.oidc.dto.SmartIdSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @Component
-public class OidcSessionStore {
+public class OidcSessionStore implements IOidcSessionStore {
     private static final String MOBILEID_SESSION_PREFIX = "mobileid:session:";
     private static final String CODE_PREFIX = "oidc:code:";
     private static final String TOKEN_PREFIX = "oidc:token:";
@@ -20,16 +19,17 @@ public class OidcSessionStore {
 
     private static final Logger log = LoggerFactory.getLogger(OidcSessionStore.class);
 
-    private final RedisClient redisClient;
+    private final IRedisClient redisClient;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final String IDCARD_SESSION_PREFIX = "idcard-session:";
 
     @Autowired
-    public OidcSessionStore(RedisClient redisClient) {
+    public OidcSessionStore(IRedisClient redisClient) {
         this.redisClient = redisClient;
     }
 
+    @Override
     public void storeMobileIdSession(String sessionId, MobileIdSession session) {
         try {
             redisClient.setObject(MOBILEID_SESSION_PREFIX + sessionId, session);
@@ -38,6 +38,7 @@ public class OidcSessionStore {
         }
     }
 
+    @Override
     public MobileIdSession getMobileIdSession(String sessionId) {
         try {
             return redisClient.getObject(MOBILEID_SESSION_PREFIX + sessionId, MobileIdSession.class);
@@ -47,6 +48,7 @@ public class OidcSessionStore {
         }
     }
 
+    @Override
     public void storeSmartIdSession(String sessionId, SmartIdSession session) {
         try {
             redisClient.setObject(SMARTID_SESSION_PREFIX + sessionId, session);
@@ -55,6 +57,7 @@ public class OidcSessionStore {
         }
     }
 
+    @Override
     public SmartIdSession getSmartIdSession(String sessionId) {
         try {
             return redisClient.getObject(SMARTID_SESSION_PREFIX + sessionId, SmartIdSession.class);
@@ -64,6 +67,7 @@ public class OidcSessionStore {
         }
     }
 
+    @Override
     public void storeCode(String code, UserInfo user) {
         try {
             redisClient.setObject(CODE_PREFIX + code, user);
@@ -72,6 +76,7 @@ public class OidcSessionStore {
         }
     }
 
+    @Override
     public void storeToken(String token, UserInfo user) {
         try {
             redisClient.setObject(TOKEN_PREFIX + token, user);
@@ -80,6 +85,7 @@ public class OidcSessionStore {
         }
     }
 
+    @Override
     public UserInfo getUserByCode(String code) {
         String json;
         try {
@@ -98,6 +104,7 @@ public class OidcSessionStore {
         }
     }
 
+    @Override
     public UserInfo getUserByToken(String token) {
         String json;
         try {
@@ -116,7 +123,7 @@ public class OidcSessionStore {
         }
     }
 
-    // Add this method to support storing IdCardSession by sessionId
+    @Override
     public void storeIdCardSession(String sessionId, IdCardSession session) {
         // Store in Redis or in-memory map as appropriate for your implementation
         // Example for in-memory map:
@@ -126,6 +133,7 @@ public class OidcSessionStore {
         redisClient.setObject(IDCARD_SESSION_PREFIX + sessionId, session);
     }
 
+    @Override
     public IdCardSession getIdCardSession(String sessionId) {
         try {
             return redisClient.getObject(IDCARD_SESSION_PREFIX + sessionId, IdCardSession.class);

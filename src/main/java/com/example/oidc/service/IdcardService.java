@@ -6,7 +6,7 @@ import com.example.oidc.dto.IdCardLoginResponse;
 import com.example.oidc.dto.IdCardSession;
 import com.example.oidc.storage.OidcClient;
 import com.example.oidc.storage.OidcClientRegistry;
-import com.example.oidc.storage.OidcSessionStore;
+import com.example.oidc.storage.IOidcSessionStore;
 import com.example.oidc.storage.UserInfo;
 import com.example.oidc.util.PersonalCodeHelper;
 import com.example.oidc.util.RandomCodeGenerator;
@@ -24,25 +24,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class IdcardService {
+public class IdcardService implements IIdcardService {
 
     private final ChallengeNonceGenerator challengeNonceGenerator;
     private final AuthTokenValidator authTokenValidator;
     private final OidcClientRegistry clientRegistry;
-    private final OidcSessionStore oidcSessionStore;
+    private final IOidcSessionStore oidcSessionStore;
 
     @Autowired
     public IdcardService(
             ChallengeNonceGenerator challengeNonceGenerator,
             AuthTokenValidator authTokenValidator,
             OidcClientRegistry clientRegistry,
-            OidcSessionStore oidcSessionStore) {
+            IOidcSessionStore oidcSessionStore) {
         this.challengeNonceGenerator = challengeNonceGenerator;
         this.authTokenValidator = authTokenValidator;
         this.clientRegistry = clientRegistry;
         this.oidcSessionStore = oidcSessionStore;
     }
 
+    @Override
     public IdCardChallengeResponse createChallenge(
             String clientId,
             String redirectUri,
@@ -59,6 +60,7 @@ public class IdcardService {
         return resp;
     }
 
+    @Override
     public IdCardLoginResponse login(
             IdCardLoginRequest body,
             String clientId,

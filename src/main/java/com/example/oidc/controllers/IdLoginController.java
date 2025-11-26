@@ -3,7 +3,7 @@ package com.example.oidc.controllers;
 import com.example.oidc.dto.IdCardChallengeResponse;
 import com.example.oidc.dto.IdCardLoginRequest;
 import com.example.oidc.dto.IdCardLoginResponse;
-import com.example.oidc.service.IdcardService;
+import com.example.oidc.service.IIdcardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,10 +17,10 @@ import java.security.cert.CertificateEncodingException;
 @Tag(name = "ID-Card Authentication", description = "Endpoints for Estonian ID-Card authentication flow")
 public class IdLoginController {
 
-    private final IdcardService idcardService;
+    private final IIdcardService idcardService;
 
     @Autowired
-    public IdLoginController(IdcardService idcardService) {
+    public IdLoginController(IIdcardService idcardService) {
         this.idcardService = idcardService;
     }
 
