@@ -46,3 +46,7 @@ mvn test
 - See `pom.xml` for dependencies
 - For development, logging is set to DEBUG for most components
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+
