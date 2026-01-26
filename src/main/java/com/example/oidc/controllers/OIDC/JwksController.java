@@ -2,10 +2,13 @@ package com.example.oidc.controllers.OIDC;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.JWKSet;
+
+import java.util.Map;
 
 @RestController
 public class JwksController {
@@ -33,8 +36,8 @@ public class JwksController {
         jwkSet = new JWKSet(rsaJwk);
     }
 
-    @GetMapping("/.well-known/jwks.json")
-    public String getJwks() {
-        return jwkSet.toJSONObject().toString();
+    @GetMapping(value = "/.well-known/jwks.json", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> getJwks() {
+        return jwkSet.toJSONObject();
     }
 }
