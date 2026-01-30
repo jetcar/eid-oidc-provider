@@ -50,7 +50,7 @@ class IdcardServiceTest {
                 when(mockNonce.getBase64EncodedNonce()).thenReturn("test-nonce");
 
                 IdCardChallengeResponse result = idcardService.createChallenge("client1", "http://localhost", "state1",
-                                "nonce1");
+                                "nonce1", "codeChallenge1", "S256");
                 assertNotNull(result.nonce);
                 assertNotNull(result.sessionId);
                 assertEquals("test-nonce", result.nonce);
