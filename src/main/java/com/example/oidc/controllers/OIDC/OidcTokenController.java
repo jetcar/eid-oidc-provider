@@ -8,6 +8,8 @@ import com.example.oidc.storage.UserInfo;
 import com.example.oidc.storage.OidcClient;
 import com.example.oidc.storage.OidcClientRegistry;
 import com.example.oidc.storage.IOidcSessionStore;
+import com.example.oidc.dto.PkceData;
+import com.example.oidc.util.PkceValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -56,6 +58,7 @@ public class OidcTokenController {
             @RequestParam("code") String code,
             @RequestParam(value = "redirect_uri", required = false) String redirectUri,
             @RequestParam(value = "scope", required = false, defaultValue = "openid profile email") String scope,
+            @RequestParam(value = "code_verifier", required = false) String codeVerifier,
             HttpServletResponse servletResponse) {
         Map<String, Object> response = new HashMap<>();
         if (code == null || code.isEmpty()) {
@@ -73,6 +76,30 @@ public class OidcTokenController {
             response.put("error", "Missing client_id parameter and could not resolve from redirect_uri");
             return response;
         }
+
+        // PKCE validation: retrieve stored PKCE data
+        PkceData pkceData = oidcSessionStore.getPkceDataByCode(code);
+        if (pkceData != null) {
+            // PKCE was used during authorization - code_verifier is required
+            if (codeVerifier == null || codeVerifier.isEmpty()) {
+                response.put("error", "invalid_grant");
+                response.put("error_description", "code_verifier required for PKCE");
+                return response;
+            }
+
+            // Validate code_verifier against stored code_challenge
+            boolean valid = PkceValidator.validate(
+                    codeVerifier,
+                    pkceData.getCodeChallenge(),
+                    pkceData.getCodeChallengeMethod());
+
+            if (!valid) {
+                response.put("error", "invalid_grant");
+                response.put("error_description", "Invalid code_verifier");
+                return response;
+            }
+        }
+
         UserInfo user = oidcSessionStore.getUserByCode(code);
         if (user == null) {
             response.put("error", "Invalid or expired authorization code");

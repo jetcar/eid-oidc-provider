@@ -3,6 +3,7 @@ package com.example.oidc.service;
 import com.example.oidc.dto.MobileIdCheckResponse;
 import com.example.oidc.dto.MobileIdSession;
 import com.example.oidc.dto.MobileIdStartResponse;
+import com.example.oidc.dto.PkceData;
 import com.example.oidc.storage.OidcClient;
 import com.example.oidc.storage.OidcClientRegistry;
 import com.example.oidc.storage.IOidcSessionStore;
@@ -50,7 +51,9 @@ public class MobileIdService implements IMobileIdService {
     @Override
     public MobileIdStartResponse startMobileId(String personalCode, String phoneNumber, String countryCode,
             String clientId,
-            String redirectUri) {
+            String redirectUri,
+            String codeChallenge,
+            String codeChallengeMethod) {
         OidcClient client = clientRegistry.isValidClient(clientId, redirectUri);
         if (client == null) {
             MobileIdStartResponse errorResponse = new MobileIdStartResponse();
@@ -86,8 +89,17 @@ public class MobileIdService implements IMobileIdService {
         String sessionId = response.getSessionID();
         log.info("Authentication session ID: " + sessionId);
 
-        oidcSessionStore.storeMobileIdSession(sessionId,
-                new MobileIdSession(false, personalCode, fullPhoneNumber, authenticationHash.getHashInBase64()));
+        MobileIdSession session = new MobileIdSession(false, personalCode, fullPhoneNumber,
+                authenticationHash.getHashInBase64());
+
+        // Store PKCE data in session if provided
+        if (codeChallenge != null && !codeChallenge.isEmpty()) {
+            PkceData pkceData = new PkceData(codeChallenge,
+                    codeChallengeMethod != null ? codeChallengeMethod : "plain");
+            session.setPkceData(pkceData);
+        }
+
+        oidcSessionStore.storeMobileIdSession(sessionId, session);
 
         MobileIdStartResponse responseBody = new MobileIdStartResponse();
         responseBody.sessionId = sessionId;
@@ -181,7 +193,7 @@ public class MobileIdService implements IMobileIdService {
                 }
             }
 
-            oidcSessionStore.storeCode(code, user);
+            oidcSessionStore.storeCode(code, user, session.getPkceData());
             StringBuilder redirectUrl = new StringBuilder()
                     .append(client.getRedirectUri(redirectUri)).append("?code=").append(code);
             if (state != null) {

@@ -5,6 +5,7 @@ public class MobileIdSession {
     private String personalCode;
     private String phoneNumber;
     private String authenticationHash;
+    private PkceData pkceData;
 
     public MobileIdSession() {
         // Default constructor
@@ -47,5 +48,13 @@ public class MobileIdSession {
 
     public void setAuthenticationHash(String authenticationHash) {
         this.authenticationHash = authenticationHash;
+    }
+
+    public PkceData getPkceData() {
+        return pkceData;
+    }
+
+    public void setPkceData(PkceData pkceData) {
+        this.pkceData = pkceData;
     }
 }

@@ -40,6 +40,8 @@ public class OidcDiscoveryController {
         config.put("id_token_signing_alg_values_supported", new String[] { "RS256" });
         config.put("scopes_supported", new String[] { "openid", "profile", "email" });
         config.put("token_endpoint_auth_methods_supported", new String[] { "client_secret_basic" });
+        // PKCE support (RFC 7636)
+        config.put("code_challenge_methods_supported", new String[] { "plain", "S256" });
         return config;
     }
 }

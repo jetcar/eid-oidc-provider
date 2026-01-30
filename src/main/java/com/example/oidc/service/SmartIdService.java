@@ -3,6 +3,7 @@ package com.example.oidc.service;
 import com.example.oidc.dto.SmartIdCheckResponse;
 import com.example.oidc.dto.SmartIdSession;
 import com.example.oidc.dto.SmartIdStartResponse;
+import com.example.oidc.dto.PkceData;
 import com.example.oidc.storage.OidcClient;
 import com.example.oidc.storage.OidcClientRegistry;
 import com.example.oidc.storage.IOidcSessionStore;
@@ -53,7 +54,8 @@ public class SmartIdService implements ISmartIdService {
     }
 
     @Override
-    public SmartIdStartResponse startSmartId(String country, String personalCode) {
+    public SmartIdStartResponse startSmartId(String country, String personalCode, String codeChallenge,
+            String codeChallengeMethod) {
         // For security reasons a new hash value must be created for each new
         // authentication request
 
@@ -62,8 +64,16 @@ public class SmartIdService implements ISmartIdService {
 
         String sessionId = RandomCodeGenerator.generateRandomCode();
 
-        oidcSessionStore.storeSmartIdSession(sessionId,
-                new SmartIdSession(false, country, personalCode, authenticationHash.getHashInBase64()));
+        SmartIdSession session = new SmartIdSession(false, country, personalCode, authenticationHash.getHashInBase64());
+
+        // Store PKCE data in session if provided
+        if (codeChallenge != null && !codeChallenge.isEmpty()) {
+            PkceData pkceData = new PkceData(codeChallenge,
+                    codeChallengeMethod != null ? codeChallengeMethod : "plain");
+            session.setPkceData(pkceData);
+        }
+
+        oidcSessionStore.storeSmartIdSession(sessionId, session);
 
         SmartIdStartResponse responseBody = new SmartIdStartResponse();
         responseBody.sessionId = sessionId;
@@ -156,7 +166,7 @@ public class SmartIdService implements ISmartIdService {
                     String base64 = getCertificateBase64(authIdentity.getAuthCertificate());
                     user.setCert(base64); // set base64 certificate
 
-                    oidcSessionStore.storeCode(code, user);
+                    oidcSessionStore.storeCode(code, user, session.getPkceData());
                     StringBuilder redirectUrl = new StringBuilder();
                     redirectUrl.append(client.getRedirectUri(redirectUri)).append("?code=").append(code);
                     if (state != null) {

@@ -11,38 +11,42 @@ import com.example.oidc.dto.IdCardLoginResponse;
  */
 public interface IIdcardService {
 
-    /**
-     * Creates a challenge nonce for ID-Card authentication.
-     *
-     * @param clientId    the OAuth2 client identifier
-     * @param redirectUri the OAuth2 redirect URI
-     * @param state       the OAuth2 state parameter
-     * @param nonce       the OIDC nonce parameter
-     * @return challenge response containing the nonce and session ID
-     */
-    IdCardChallengeResponse createChallenge(
-            String clientId,
-            String redirectUri,
-            String state,
-            String nonce);
+        /**
+         * Creates a challenge nonce for ID-Card authentication.
+         *
+         * @param clientId            the OAuth2 client identifier
+         * @param redirectUri         the OAuth2 redirect URI
+         * @param state               the OAuth2 state parameter
+         * @param nonce               the OIDC nonce parameter
+         * @param codeChallenge       the PKCE code challenge
+         * @param codeChallengeMethod the PKCE code challenge method (S256 or plain)
+         * @return challenge response containing the nonce and session ID
+         */
+        IdCardChallengeResponse createChallenge(
+                        String clientId,
+                        String redirectUri,
+                        String state,
+                        String nonce,
+                        String codeChallenge,
+                        String codeChallengeMethod);
 
-    /**
-     * Validates ID-Card authentication token and completes login.
-     *
-     * @param body        the authentication request containing certificate and
-     *                    signature
-     * @param clientId    the OAuth2 client identifier
-     * @param redirectUri the OAuth2 redirect URI
-     * @param state       the OAuth2 state parameter
-     * @param nonce       the OIDC nonce parameter
-     * @param sessionId   the challenge session identifier
-     * @return login response with authorization code or error
-     */
-    IdCardLoginResponse login(
-            IdCardLoginRequest body,
-            String clientId,
-            String redirectUri,
-            String state,
-            String nonce,
-            String sessionId);
+        /**
+         * Validates ID-Card authentication token and completes login.
+         *
+         * @param body        the authentication request containing certificate and
+         *                    signature
+         * @param clientId    the OAuth2 client identifier
+         * @param redirectUri the OAuth2 redirect URI
+         * @param state       the OAuth2 state parameter
+         * @param nonce       the OIDC nonce parameter
+         * @param sessionId   the challenge session identifier
+         * @return login response with authorization code or error
+         */
+        IdCardLoginResponse login(
+                        IdCardLoginRequest body,
+                        String clientId,
+                        String redirectUri,
+                        String state,
+                        String nonce,
+                        String sessionId);
 }

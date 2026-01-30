@@ -28,8 +28,11 @@ public class MobileIdController {
             @Parameter(description = "Personal identification code", required = true) @RequestParam String personalCode,
             @Parameter(description = "Phone number with country code", required = true) @RequestParam String phoneNumber,
             @Parameter(description = "OAuth2 client ID") @RequestParam(required = false) String client_id,
-            @Parameter(description = "OAuth2 redirect URI") @RequestParam(required = false) String redirect_uri) {
-        return mobileIdService.startMobileId(personalCode, phoneNumber, countryCode, client_id, redirect_uri);
+            @Parameter(description = "OAuth2 redirect URI") @RequestParam(required = false) String redirect_uri,
+            @Parameter(description = "PKCE code challenge") @RequestParam(required = false) String code_challenge,
+            @Parameter(description = "PKCE code challenge method (S256 or plain)") @RequestParam(required = false) String code_challenge_method) {
+        return mobileIdService.startMobileId(personalCode, phoneNumber, countryCode, client_id, redirect_uri,
+                code_challenge, code_challenge_method);
     }
 
     @GetMapping("/mobileid/check")

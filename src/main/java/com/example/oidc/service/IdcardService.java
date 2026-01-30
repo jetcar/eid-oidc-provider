@@ -4,6 +4,7 @@ import com.example.oidc.dto.IdCardChallengeResponse;
 import com.example.oidc.dto.IdCardLoginRequest;
 import com.example.oidc.dto.IdCardLoginResponse;
 import com.example.oidc.dto.IdCardSession;
+import com.example.oidc.dto.PkceData;
 import com.example.oidc.storage.OidcClient;
 import com.example.oidc.storage.OidcClientRegistry;
 import com.example.oidc.storage.IOidcSessionStore;
@@ -48,13 +49,23 @@ public class IdcardService implements IIdcardService {
             String clientId,
             String redirectUri,
             String state,
-            String nonce) {
+            String nonce,
+            String codeChallenge,
+            String codeChallengeMethod) {
         ChallengeNonce challengeNonce = challengeNonceGenerator.generateAndStoreNonce();
         IdCardChallengeResponse resp = new IdCardChallengeResponse();
         String sessionId = RandomCodeGenerator.generateRandomCode();
-        oidcSessionStore.storeIdCardSession(
-                sessionId,
-                new IdCardSession(false, challengeNonce.getBase64EncodedNonce()));
+
+        IdCardSession session = new IdCardSession(false, challengeNonce.getBase64EncodedNonce());
+
+        // Store PKCE data in session if provided
+        if (codeChallenge != null && !codeChallenge.isEmpty()) {
+            PkceData pkceData = new PkceData(codeChallenge,
+                    codeChallengeMethod != null ? codeChallengeMethod : "plain");
+            session.setPkceData(pkceData);
+        }
+
+        oidcSessionStore.storeIdCardSession(sessionId, session);
         resp.nonce = challengeNonce.getBase64EncodedNonce();
         resp.sessionId = sessionId;
         return resp;
@@ -151,7 +162,7 @@ public class IdcardService implements IIdcardService {
                 null,
                 nonce);
         user.setCert(certBase64);
-        oidcSessionStore.storeCode(code, user);
+        oidcSessionStore.storeCode(code, user, idCardSession != null ? idCardSession.getPkceData() : null);
 
         StringBuilder redirect = new StringBuilder(client.getRedirectUri(redirectUri))
                 .append("?code=").append(code);

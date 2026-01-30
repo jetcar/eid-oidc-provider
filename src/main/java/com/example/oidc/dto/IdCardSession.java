@@ -3,6 +3,7 @@ package com.example.oidc.dto;
 public class IdCardSession {
     private boolean complete;
     private String challengeNonce;
+    private PkceData pkceData;
 
     public IdCardSession() {
         // Default constructor
@@ -27,5 +28,13 @@ public class IdCardSession {
 
     public void setChallengeNonce(String challengeNonce) {
         this.challengeNonce = challengeNonce;
+    }
+
+    public PkceData getPkceData() {
+        return pkceData;
+    }
+
+    public void setPkceData(PkceData pkceData) {
+        this.pkceData = pkceData;
     }
 }

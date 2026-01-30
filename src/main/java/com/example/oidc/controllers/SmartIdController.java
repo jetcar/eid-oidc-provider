@@ -25,8 +25,10 @@ public class SmartIdController {
     @Operation(summary = "Start Smart-ID authentication", description = "Initiates a Smart-ID authentication session")
     public SmartIdStartResponse startSmartId(
             @Parameter(description = "Country code (e.g., EE, LT, LV)", required = true) @RequestParam String country,
-            @Parameter(description = "Personal identification code", required = true) @RequestParam String personalCode) {
-        return smartIdService.startSmartId(country, personalCode);
+            @Parameter(description = "Personal identification code", required = true) @RequestParam String personalCode,
+            @Parameter(description = "PKCE code challenge") @RequestParam(required = false) String code_challenge,
+            @Parameter(description = "PKCE code challenge method (S256 or plain)") @RequestParam(required = false) String code_challenge_method) {
+        return smartIdService.startSmartId(country, personalCode, code_challenge, code_challenge_method);
     }
 
     @GetMapping("/smartid/check")

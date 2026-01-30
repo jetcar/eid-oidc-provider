@@ -5,6 +5,7 @@ public class SmartIdSession {
     private String country;
     private String personalCode;
     private String authenticationHash;
+    private PkceData pkceData;
 
     public SmartIdSession() {
         // default constructor
@@ -47,5 +48,13 @@ public class SmartIdSession {
 
     public void setAuthenticationHash(String authenticationHash) {
         this.authenticationHash = authenticationHash;
+    }
+
+    public PkceData getPkceData() {
+        return pkceData;
+    }
+
+    public void setPkceData(PkceData pkceData) {
+        this.pkceData = pkceData;
     }
 }

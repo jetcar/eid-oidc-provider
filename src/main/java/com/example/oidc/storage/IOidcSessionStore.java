@@ -68,6 +68,23 @@ public interface IOidcSessionStore {
     void storeCode(String code, UserInfo user);
 
     /**
+     * Stores an authorization code with PKCE data.
+     *
+     * @param code     the authorization code
+     * @param user     the user information to associate with the code
+     * @param pkceData the PKCE challenge data (can be null if PKCE not used)
+     */
+    void storeCode(String code, UserInfo user, com.example.oidc.dto.PkceData pkceData);
+
+    /**
+     * Retrieves PKCE data for an authorization code.
+     *
+     * @param code the authorization code
+     * @return the PKCE data or null if not found or PKCE not used
+     */
+    com.example.oidc.dto.PkceData getPkceDataByCode(String code);
+
+    /**
      * Stores an access token associated with user information.
      *
      * @param token the access token

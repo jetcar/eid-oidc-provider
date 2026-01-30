@@ -30,8 +30,10 @@ public class IdLoginController {
             @Parameter(description = "OAuth2 client ID") @RequestParam(value = "client_id", required = false) String clientId,
             @Parameter(description = "OAuth2 redirect URI") @RequestParam(value = "redirect_uri", required = false) String redirectUri,
             @Parameter(description = "OAuth2 state parameter") @RequestParam(value = "state", required = false) String state,
-            @Parameter(description = "OIDC nonce parameter") @RequestParam(value = "nonce", required = false) String nonce) {
-        return idcardService.createChallenge(clientId, redirectUri, state, nonce);
+            @Parameter(description = "OIDC nonce parameter") @RequestParam(value = "nonce", required = false) String nonce,
+            @Parameter(description = "PKCE code challenge") @RequestParam(value = "code_challenge", required = false) String codeChallenge,
+            @Parameter(description = "PKCE code challenge method (S256 or plain)") @RequestParam(value = "code_challenge_method", required = false) String codeChallengeMethod) {
+        return idcardService.createChallenge(clientId, redirectUri, state, nonce, codeChallenge, codeChallengeMethod);
     }
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)

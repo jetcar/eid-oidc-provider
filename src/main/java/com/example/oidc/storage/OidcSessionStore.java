@@ -16,6 +16,7 @@ public class OidcSessionStore implements IOidcSessionStore {
     private static final String CODE_PREFIX = "oidc:code:";
     private static final String TOKEN_PREFIX = "oidc:token:";
     private static final String SMARTID_SESSION_PREFIX = "smartid:session:";
+    private static final String PKCE_PREFIX = "oidc:pkce:";
 
     private static final Logger log = LoggerFactory.getLogger(OidcSessionStore.class);
 
@@ -69,10 +70,28 @@ public class OidcSessionStore implements IOidcSessionStore {
 
     @Override
     public void storeCode(String code, UserInfo user) {
+        storeCode(code, user, null);
+    }
+
+    @Override
+    public void storeCode(String code, UserInfo user, com.example.oidc.dto.PkceData pkceData) {
         try {
             redisClient.setObject(CODE_PREFIX + code, user);
+            if (pkceData != null) {
+                redisClient.setObject(PKCE_PREFIX + code, pkceData);
+            }
         } catch (Exception e) {
             log.error("Failed to store code {}: {}", code, e.getMessage());
+        }
+    }
+
+    @Override
+    public com.example.oidc.dto.PkceData getPkceDataByCode(String code) {
+        try {
+            return redisClient.getObject(PKCE_PREFIX + code, com.example.oidc.dto.PkceData.class);
+        } catch (Exception e) {
+            log.error("Failed to get PKCE data for code {}: {}", code, e.getMessage());
+            return null;
         }
     }
 
