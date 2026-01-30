@@ -3,7 +3,7 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests -B
-FROM eclipse-temurin:21.0.6_7-jre-alpine
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8443 5005
